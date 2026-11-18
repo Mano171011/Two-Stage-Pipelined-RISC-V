@@ -24,6 +24,7 @@
 module riscv_processor(
     input logic clk,
     input logic reset,
+    input logic stall,
 
     output logic [31:0] current_pc,
     output logic [31:0] current_instruction,
@@ -33,6 +34,7 @@ module riscv_processor(
 instruction_fetch IF_STAGE (
     .clk(clk),
     .reset(reset),
+    .stall(stall),
     .instruction_out(current_instruction),
     .pc_out(current_pc)
 );

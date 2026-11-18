@@ -20,16 +20,38 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module instruction_fetch(input logic clk ,input logic reset,
-                         output logic [31:0] instruction_out,
-                         output logic [31:0] pc_out);
-//internal signal
-logic [31:0] instruction;
+module instruction_fetch(
+    input logic clk,
+    input logic reset,
+    input logic stall,
+
+    output logic [31:0] instruction_out,
+    output logic [31:0] pc_out
+);
+
 logic [31:0] pc;
-//program counter
-program_counter PC (.clk(clk),.reset(reset),.pc(pc));
-//instruction memory
-instruction_memory IMEM(.address(pc),.instruction(instruction));
-//if/ex pipeline register 
-if_ex_register IF_EX(.clk(clk),.reset(reset),.if_instruction(instruction),.if_pc(pc),.ex_instruction(instruction_out),.ex_pc(pc_out));
+logic [31:0] instruction;
+
+program_counter PC (
+    .clk(clk),
+    .reset(reset),
+    .stall(stall),
+    .pc(pc)
+);
+
+instruction_memory IMEM (
+    .address(pc),
+    .instruction(instruction)
+);
+
+if_ex_register IF_EX (
+    .clk(clk),
+    .reset(reset),
+    .stall(stall),
+    .if_instruction(instruction),
+    .if_pc(pc),
+    .ex_instruction(instruction_out),
+    .ex_pc(pc_out)
+);
+
 endmodule

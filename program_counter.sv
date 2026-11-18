@@ -20,12 +20,18 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module program_counter(input logic clk,input logic reset,output logic [31:0] pc);
-always_ff @(posedge clk or posedge reset)
-begin 
-if(reset)
-pc <= 32'h80000000;
-else
-pc <= pc +4;
+module program_counter(
+    input logic clk,
+    input logic reset,
+    input logic stall,
+    output logic [31:0] pc
+);
+
+always_ff @(posedge clk or posedge reset) begin
+    if (reset)
+        pc <= 32'h80000000;
+    else if (!stall)
+        pc <= pc + 4;
 end
+
 endmodule
